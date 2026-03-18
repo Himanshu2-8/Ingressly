@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:latest
+
+    ports:
+      - "5432:5432"
+
+    restart: always
+
+    environment:
+      # create a 'postgres' user with this password (default user is 'postgres')
+      POSTGRES_PASSWORD: password
+      # ensure the 'task' database is created on container initialization
+      POSTGRES_DB: task
+      # explicit user (optional, default is 'postgres')
+      POSTGRES_USER: postgres
