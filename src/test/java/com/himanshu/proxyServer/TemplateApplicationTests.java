@@ -1,4 +1,4 @@
-package com.himanshu.template;
+package com.himanshu.proxyServer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

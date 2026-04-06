@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.Himanshu</groupId>
-    <artifactId>template</artifactId>
+    <artifactId>proxyServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>template</name>
-    <description>template</description>
+    <name>proxyServer</name>
+    <description>proxy server</description>
     <url/>
     <licenses>
         <license/>
@@ -63,6 +63,12 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
