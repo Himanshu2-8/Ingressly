@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Service {
+public class ProxyEndpoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,3 +52,4 @@ public class Service {
     }
 
 }
+
