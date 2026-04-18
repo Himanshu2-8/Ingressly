@@ -6,6 +6,8 @@ import com.himanshu.proxyServer.domain.entities.ProxyEndpoint;
 import com.himanshu.proxyServer.domain.entities.User;
 import com.himanshu.proxyServer.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+//import org.springframework.security.crypto.bcrypt.BCrypt;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,11 +25,12 @@ public class UserService {
         if (existingUserByEmail.isPresent()) {
             throw new RuntimeException("Email already exists");
         }
+        String password = request.getPassword();
         User user = new User(
                 null,
                 request.getUsername(),
                 request.getEmail(),
-                request.getPassword(),
+                password,
                 new ArrayList<ProxyEndpoint>(),
                 null,
                 null
@@ -41,6 +44,20 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException("Error during user registration: " + e.getMessage());
         }
+    }
+
+    public Optional<User> signin(String email, String password) throws RuntimeException {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            String storedPassword = user.getPassword();
+            if (storedPassword.equals(password)) {
+                return Optional.of(user);
+            } else {
+                throw new RuntimeException("Invalid password");
+            }
+        }
+        return Optional.empty();
     }
 
     public User findById(String email) {
