@@ -5,12 +5,17 @@ import com.himanshu.proxyServer.domain.dto.SignupResponse;
 import com.himanshu.proxyServer.domain.entities.ProxyEndpoint;
 import com.himanshu.proxyServer.domain.entities.User;
 import com.himanshu.proxyServer.repositories.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.bcrypt.BCrypt;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -18,6 +23,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public SignupResponse signup(SignupRequest request) {
         String requestUsername = request.getUsername();
@@ -30,7 +36,7 @@ public class UserService {
                 null,
                 request.getUsername(),
                 request.getEmail(),
-                password,
+                Objects.requireNonNull(passwordEncoder.encode(password)),
                 new ArrayList<ProxyEndpoint>(),
                 null,
                 null
@@ -51,7 +57,7 @@ public class UserService {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
             String storedPassword = user.getPassword();
-            if (storedPassword.equals(password)) {
+            if (passwordEncoder.matches(password, storedPassword)) {
                 return Optional.of(user);
             } else {
                 throw new RuntimeException("Invalid password");
@@ -66,6 +72,10 @@ public class UserService {
            throw new RuntimeException("User not found with email: " + email);
        }
        return userOptional.get();
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
 }

@@ -54,5 +54,14 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @GetMapping("/users")
+    public ResponseEntity<Iterable<User>> findAllUsers(){
+        try{
+            userService.findAllUsers();
+            return ResponseEntity.ok(userService.findAllUsers());
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }
