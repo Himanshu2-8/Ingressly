@@ -2,6 +2,7 @@ package com.himanshu.proxyServer.services;
 
 import com.himanshu.proxyServer.domain.entities.ProxyEndpoint;
 import com.himanshu.proxyServer.domain.entities.User;
+import com.himanshu.proxyServer.repositories.ProxyEndpointRepository;
 import com.himanshu.proxyServer.repositories.UserRepository;
 import com.himanshu.proxyServer.utils.ApiKeyGenerator;
 import com.himanshu.proxyServer.utils.SubdomainGenerator;
@@ -19,6 +20,7 @@ public class ProxyService {
     private final UserRepository userRepository;
     private final SubdomainGenerator subdomainGenerator;
     private final ApiKeyGenerator apiKeyGenerator;
+    private final ProxyEndpointRepository proxyEndpointRepository;
 
     public ProxyEndpoint createService(String email, String domainName) {
         if(email == null || domainName == null || domainName.isBlank()) {
@@ -31,7 +33,7 @@ public class ProxyService {
         User user = existingUser.get();
         String subdomain = subdomainGenerator.generateSubdomain();
         String apiKey=apiKeyGenerator.generateApiKey();
-        return new ProxyEndpoint(
+        ProxyEndpoint proxyEndpoint = new ProxyEndpoint(
                 null,
                 subdomain,
                 domainName,
@@ -41,6 +43,15 @@ public class ProxyService {
                 null,
                 null
         );
+        return proxyEndpointRepository.save(proxyEndpoint);
+    }
+
+    public boolean validateApiKey(String apiKey){
+        if(apiKey == null || apiKey.isBlank()) {
+            return false;
+        }
+        Optional<ProxyEndpoint> proxyEndpoint = proxyEndpointRepository.findByApiKey(apiKey);
+        return proxyEndpoint.isPresent();
     }
 
 }

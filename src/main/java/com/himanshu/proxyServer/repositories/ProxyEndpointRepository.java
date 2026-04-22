@@ -11,5 +11,6 @@ public interface ProxyEndpointRepository extends JpaRepository<ProxyEndpoint, UU
 
     List<ProxyEndpoint> findByUserId(UUID userId);
     Optional<ProxyEndpoint> findByDomainName(String domainName);
+    Optional<ProxyEndpoint> findByApiKey(String apiKey);
 }
 

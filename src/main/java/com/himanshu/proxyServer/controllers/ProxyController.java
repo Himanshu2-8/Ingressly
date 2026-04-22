@@ -60,6 +60,12 @@ public class ProxyController {
   }
   @RequestMapping("/**")
   public ResponseEntity<String> handleAllOtherRequests(HttpServletRequest request){
+    String apiKey = request.getHeader("X-API-Key");
+    if(proxyService.validateApiKey(apiKey)){
+      System.out.println("Valid API key received: " + apiKey);
+    }else{
+      return ResponseEntity.status(401).body("Invalid API key. Access denied.");
+    }
     String requestUri = request.getRequestURI();
     System.out.println("Received request for URI: " + requestUri);
     ExtractDomainAndSubdomain.DomainInfo domainInfo = extactor.extract(requestUri);
